@@ -75,17 +75,24 @@ init {
     print(version);
 }
 
-gameTime {
+//gameTime {
     // Get exact IGT for splits
+    //float milliseconds = current.inGameTime * 1000f;
+    //TimeSpan interval = new TimeSpan(0, 0, 0, 0, (int)milliseconds);
+    //return interval;
+//}
 
+update {
+    // Get IGT and store it
+    if (timer.CurrentPhase != TimerPhase.Running) {return false;}
     float milliseconds = current.inGameTime * 1000f;
     TimeSpan interval = new TimeSpan(0, 0, 0, 0, (int)milliseconds);
-    return interval;
-
+    vars.igtDisplay = interval.ToString(@"hh\:mm\:ss\.ff");
 }
 
+
 split {
-    if (current.missionComplete > old.missionComplete) {
+    if (current.missionComplete > old.missionComplete) {0
         return true;
     }
 }
