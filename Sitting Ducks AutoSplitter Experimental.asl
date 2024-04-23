@@ -71,10 +71,6 @@ init {
     print(version);
 }
 
-onReset {
-    vars.totalLoadTime = 0;
-}
-
 isLoading {
     return current.loading != 0;
     // This isn't perfect as it pauses for loads during missions even when the mission timer is still counting down
