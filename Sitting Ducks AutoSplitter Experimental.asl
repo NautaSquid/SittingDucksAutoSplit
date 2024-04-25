@@ -4,7 +4,7 @@ state("overlay", "US") {
     short inGame: "overlay.exe", 0x1C52B0;
     int frameCount: "overlay.exe", 0x1D5CB0;
     short missionComplete: "overlay.exe", 0x001D5A48, 0x8, 0x268;
-    float inGameTime: "overlay.exe", 0x001EFE64, 0x1B0, 0x14C, 0x10, 0xA3C;
+    float duckTime: "overlay.exe", 0x001D5A50, 0x26DC;
 }
 
 // EU
@@ -97,7 +97,7 @@ split {
 update {
     // Get IGT and store it
     if (timer.CurrentPhase == TimerPhase.Running) {
-        float milliseconds = current.inGameTime * 1000f;
+        float milliseconds = current.duckTime * 1000f;
         TimeSpan duckTime = new TimeSpan(0, 0, 0, 0, (int)milliseconds);
         vars.igt = duckTime.ToString(@"hh\:mm\:ss\.ff");
         // Calculate Time dilation (Duck Milliseconds Per Real Milliseconds)
@@ -110,7 +110,7 @@ update {
 
 //gameTime {
     // Get exact IGT for splits
-    //float milliseconds = current.inGameTime * 1000f;
+    //float milliseconds = current.duckTime * 1000f;
     //TimeSpan interval = new TimeSpan(0, 0, 0, 0, (int)milliseconds);
     //return interval;
 //}
