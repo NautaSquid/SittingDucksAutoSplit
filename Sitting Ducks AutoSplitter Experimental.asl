@@ -2,7 +2,7 @@
 state("overlay", "US") {
     short loading: "overlay.exe", 0x1D5A5C, 0x70, 0x5FC;
     short missionComplete: "overlay.exe", 0x001D5A48, 0x8, 0x268;
-    float duckTime: "overlay.exe", 0x001D5A50, 0x26DC; //Good
+    float duckTime: "overlay.exe", 0x001D5A50, 0x26DC;
 }
 
 // EU
