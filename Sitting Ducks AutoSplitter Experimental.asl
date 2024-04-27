@@ -2,21 +2,24 @@
 state("overlay", "US") {
     short loading: "overlay.exe", 0x1D5A5C, 0x70, 0x5FC;
     short missionComplete: "overlay.exe", 0x1D5A48, 0x8, 0x268;
-    float duckTime: "overlay.exe", 0x1D5A50, 0x26DC; //Good
+    float duckTime: "overlay.exe", 0x1D5A50, 0x26DC;
+    int featherCount: "overlay.exe", 0x1D5A50, 0x1F54;
 }
 
 // EU
 state("overlay", "EU") {
     short loading: "overlay.exe", 0x1D5A4C, 0x70, 0x5FC;
     short missionComplete: "overlay.exe", 0x1D5A38, 0x8, 0x268;
-    float duckTime: "overlay.exe", 0x1D5A40, 0x26DC; //Good
+    float duckTime: "overlay.exe", 0x1D5A40, 0x26DC;
+    int featherCount: "overlay.exe", 0x1D5A40, 0x1F54;
 }
 
 // Polish/Russian
 state("overlay", "RU") {
     short loading: "overlay.exe", 0x1D6A8C, 0x70, 0x5FC; 
     short missionComplete: "overlay.exe", 0x1D6A90, 0x18, 0x9C, 0x4BC, 0x560, 0x40, 0x38, 0xE08;
-    float duckTime: "overlay.exe", 0x1D6A80, 0x26DC; //Good
+    float duckTime: "overlay.exe", 0x1D6A80, 0x26DC;
+    int featherCount: "overlay.exe", 0x1D6A80, 0x1F54;
 }
 
 init {
@@ -69,10 +72,12 @@ init {
             break;
     }
     print(version);
+    vars.bonks = 0;
 }
 
 onReset {
     vars.totalLoadTime = 0;
+    vars.bonks = 0;
 }
 
 isLoading {
@@ -97,6 +102,7 @@ update {
         vars.gtms = (float)(((TimeSpan)duckTime).Ticks) / 10000;
         vars.timeDilation = (vars.gtms / vars.rtms).ToString("n4");
     }
+    if (current.featherCount == (old.featherCount - 3)) { vars.bonks ++; }
 }
 
 //gameTime {
