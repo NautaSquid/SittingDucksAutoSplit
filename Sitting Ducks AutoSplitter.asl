@@ -1,22 +1,25 @@
 // US 
 state("overlay", "US") {
     short loading: "overlay.exe", 0x1D5A5C, 0x70, 0x5FC;
-    short missionComplete: "overlay.exe", 0x001D5A48, 0x8, 0x268;
-    float duckTime: "overlay.exe", 0x001D5A50, 0x26DC;
+    short missionComplete: "overlay.exe", 0x1D5A48, 0x8, 0x268;
+    float duckTime: "overlay.exe", 0x1D5A50, 0x26DC;
+    int featherCount: "overlay.exe", 0x1D5A50, 0x1F54;
 }
 
 // EU
 state("overlay", "EU") {
     short loading: "overlay.exe", 0x1D5A4C, 0x70, 0x5FC;
-    short missionComplete: "overlay.exe", 0x001D5A38, 0x8, 0x268;
+    short missionComplete: "overlay.exe", 0x1D5A38, 0x8, 0x268;
     float duckTime: "overlay.exe", 0x1D5A40, 0x26DC;
+    int featherCount: "overlay.exe", 0x1D5A40, 0x1F54;
 }
 
 // Polish/Russian
 state("overlay", "RU") {
     short loading: "overlay.exe", 0x1D6A8C, 0x70, 0x5FC; 
-    short missionComplete: "overlay.exe", 0x001D6A90, 0x18, 0x9C, 0x4BC, 0x560, 0x40, 0x38, 0xE08;
+    short missionComplete: "overlay.exe", 0x1D6A90, 0x18, 0x9C, 0x4BC, 0x560, 0x40, 0x38, 0xE08;
     float duckTime: "overlay.exe", 0x1D6A80, 0x26DC;
+    int featherCount: "overlay.exe", 0x1D6A80, 0x1F54;
 }
 
 init {
@@ -81,3 +84,7 @@ isLoading {
 start { if (current.duckTime < old.duckTime) { return true; } }
 
 split { if (current.missionComplete > old.missionComplete) { return true; } }
+
+update {
+    if (current.featherCount == (old.featherCount - 3)) { vars.bonks ++; }
+}

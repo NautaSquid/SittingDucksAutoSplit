@@ -2,6 +2,7 @@ state("overlay") {
     short loading: "overlay.exe", 0x1D6A8C, 0x70, 0x5FC; 
     short missionComplete: "overlay.exe", 0x001D6A90, 0x18, 0x9C, 0x4BC, 0x560, 0x40, 0x38, 0xE08;
     float duckTime: "overlay.exe", 0x1D6A80, 0x26DC;
+    int featherCount: "overlay.exe", 0x1D6A80, 0x1F54;
 }
 
 isLoading {
@@ -14,3 +15,7 @@ isLoading {
 start { if (current.duckTime < old.duckTime) { return true; } }
 
 split { if (current.missionComplete > old.missionComplete) { return true; } }
+
+update {
+    if (current.featherCount == (old.featherCount - 3)) { vars.bonks ++; }
+}
