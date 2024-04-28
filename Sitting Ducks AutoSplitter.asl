@@ -56,6 +56,10 @@ init {
         case "E8D8FA35FF9FEC771BFDFA81E10CF904" :
             version = "RU";
             break;
+        // EU NG+
+        case "668DDA5B58F5930CAD714B27525064AF" :
+            version = "EU";
+            break;
         // Unknown
         default :
             version = "US";
