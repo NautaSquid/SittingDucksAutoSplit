@@ -76,7 +76,6 @@ init {
 }
 
 onReset {
-    vars.totalLoadTime = 0;
     vars.bonks = 0;
 }
 
@@ -96,13 +95,14 @@ update {
     if (timer.CurrentPhase == TimerPhase.Running) {
         float milliseconds = current.duckTime * 1000f;
         TimeSpan duckTime = new TimeSpan(0, 0, 0, 0, (int)milliseconds);
-        vars.igt = duckTime.ToString(@"hh\:mm\:ss\.ff");
+        vars.duckTime = duckTime.ToString(@"hh\:mm\:ss\.ff");
         // Calculate Time dilation (Duck Milliseconds Per Millisecond)
         vars.rtms = (float)((TimeSpan)timer.CurrentTime.RealTime).Ticks / 10000;
-        vars.gtms = (float)(((TimeSpan)duckTime).Ticks) / 10000;
-        vars.timeDilation = (vars.gtms / vars.rtms).ToString("n4");
+        vars.dtms = (float)(((TimeSpan)duckTime).Ticks) / 10000;
+        vars.timeDilation = (vars.dtms / vars.rtms).ToString("n4");
+
+        if (current.featherCount == (old.featherCount - 3)) { vars.bonks ++; }
     }
-    if (current.featherCount == (old.featherCount - 3)) { vars.bonks ++; }
 }
 
 //gameTime {
