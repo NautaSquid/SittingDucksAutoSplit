@@ -73,41 +73,49 @@ init {
     }
     print(version);
     vars.bonks = 0;
+    vars.totalLoads = TimeSpan.Zero;
+    vars.lastUpdate = DateTime.Now;
 }
 
 onReset {
     vars.bonks = 0;
+    vars.totalLoads = TimeSpan.Zero;
+    vars.lastUpdate = DateTime.Now;
 }
-
-isLoading {
-    return current.loading != 0;
-    // This isn't perfect as it pauses for loads during missions even when the mission timer is still counting down
-    // Could use float missionTimerDisplay: "overlay.exe", 0x1D5A44, 0x8, 0x8F4, 0x10, 0x200; //(EU)
-    // This would not count loads for quack the ripper where they should count though
-}
-
-start { if (current.duckTime < old.duckTime) { return true; } }
-
-split { if (current.missionComplete > old.missionComplete) { return true; } }
 
 update {
+   
     // Get Duck Time (In game timer) and store it
     if (timer.CurrentPhase == TimerPhase.Running) {
         float milliseconds = current.duckTime * 1000f;
-        TimeSpan duckTime = new TimeSpan(0, 0, 0, 0, (int)milliseconds);
-        vars.duckTime = duckTime.ToString(@"hh\:mm\:ss\.ff");
+        vars.duckTime = new TimeSpan(0, 0, 0, 0, (int)milliseconds);
+        vars.duckTimeFormatted = vars.duckTime.ToString(@"hh\:mm\:ss\.ff");
         // Calculate Time dilation (Duck Milliseconds Per Millisecond)
         vars.rtms = (float)((TimeSpan)timer.CurrentTime.RealTime).Ticks / 10000;
-        vars.dtms = (float)(((TimeSpan)duckTime).Ticks) / 10000;
+        vars.dtms = (float)(((TimeSpan)vars.duckTime).Ticks) / 10000;
         vars.timeDilation = (vars.dtms / vars.rtms).ToString("n4");
 
         if (current.featherCount == (old.featherCount - 3)) { vars.bonks ++; }
     }
 }
 
-//gameTime {
-    // Get exact IGT for splits
-    //float milliseconds = current.duckTime * 1000f;
-    //TimeSpan interval = new TimeSpan(0, 0, 0, 0, (int)milliseconds);
-    //return interval;
-//}
+isLoading {
+    return true;
+}
+
+gameTime {
+     // Calculate total load times
+    if (current.loading != 0) {
+        vars.totalLoads += (DateTime.Now - vars.lastUpdate);
+    }
+    vars.lastUpdate = DateTime.Now;
+    // Set gameTime to in game time (ducktime) minus load times
+    if (current.loading == 0) {
+        TimeSpan interval = (vars.duckTime - vars.totalLoads);
+        return interval;
+    }
+}
+
+split { if (current.missionComplete > old.missionComplete) { return true; } }
+
+start { if (current.duckTime < old.duckTime) { return true; } }
