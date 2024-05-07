@@ -48,6 +48,10 @@ init {
         case "CF32A494802DDB0CD353ACA4F6443998" :
             version = "US";
             break;
+        // US 2005 Patched
+        case "1F10E15326D8FCEB3B1538F4B0027EC0" :
+            version = "US";
+            break;
         // Polish
         case "0EC347B6A96E50A3F6BC77BF675AB193" :
             version = "RU";
@@ -106,9 +110,9 @@ isLoading {
 gameTime {
      // Calculate total load times
     if (current.loading != 0) {
-        vars.totalLoads += (DateTime.Now - vars.lastUpdate);
+        int delta_ms = (int)((current.duckTime - old.duckTime) * 1000f);
+        vars.totalLoads += new TimeSpan(0, 0, 0, 0, delta_ms);
     }
-    vars.lastUpdate = DateTime.Now;
     // Set gameTime to in game time (ducktime) minus load times
     if (current.loading == 0) {
         TimeSpan interval = (vars.duckTime - vars.totalLoads);
