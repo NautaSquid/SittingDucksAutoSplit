@@ -78,17 +78,14 @@ init {
     print(version);
     vars.bonks = 0;
     vars.totalLoads = TimeSpan.Zero;
-    vars.lastUpdate = DateTime.Now;
 }
 
 onReset {
     vars.bonks = 0;
     vars.totalLoads = TimeSpan.Zero;
-    vars.lastUpdate = DateTime.Now;
 }
 
 update {
-   
     // Get Duck Time (In game timer) and store it
     if (timer.CurrentPhase == TimerPhase.Running) {
         float milliseconds = current.duckTime * 1000f;
@@ -98,7 +95,7 @@ update {
         vars.rtms = (float)((TimeSpan)timer.CurrentTime.RealTime).Ticks / 10000;
         vars.dtms = (float)(((TimeSpan)vars.duckTime).Ticks) / 10000;
         vars.timeDilation = (vars.dtms / vars.rtms).ToString("n4");
-
+        // Bonk Counter - Doesn't work if fewer than 3 feathers or playing Aldo
         if (current.featherCount == (old.featherCount - 3)) { vars.bonks ++; }
     }
 }
