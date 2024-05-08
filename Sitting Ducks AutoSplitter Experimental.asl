@@ -91,7 +91,7 @@ onReset {
 update {
     // Get Duck Time (In game timer) and store it
     if (timer.CurrentPhase == TimerPhase.Running) {
-        int milliseconds = (int)(current.duckTimeSeconds * 1000f);
+        int milliseconds = (int)Math.Round(current.duckTimeSeconds * 1000f);
         vars.duckTime = new TimeSpan(0, (int)current.duckTimeHours, 0, 0, milliseconds);
         vars.duckTimeFormatted = vars.duckTime.ToString(@"hh\:mm\:ss\.ff");
         // Calculate Time dilation (Duck Milliseconds Per Millisecond)
@@ -110,10 +110,11 @@ isLoading {
 gameTime {
      // Calculate total load times
     if (current.loading != 0) {
-        int oldMilliseconds = (int)Math.Round(old.duckTimeSeconds * 1000f) + ((int)old.duckTimeHours * 3600000);
-        int currentMilliseconds = (int)Math.Round(current.duckTimeSeconds * 1000f) + ((int)current.duckTimeHours * 3600000);
-        int delta = currentMilliseconds - oldMilliseconds;
-        vars.totalLoads += new TimeSpan(0, 0, 0, 0, delta);
+        int currentMilliseconds = (int)Math.Round(current.duckTimeSeconds * 1000f);
+        TimeSpan currentDuckTime = new TimeSpan(0, (int)current.duckTimeHours, 0, 0, currentMilliseconds);
+        int oldMilliseconds = (int)Math.Round(old.duckTimeSeconds * 1000f);
+        TimeSpan oldDuckTime = new TimeSpan(0, (int)old.duckTimeHours, 0, 0, oldMilliseconds);
+        vars.totalLoads += currentDuckTime - oldDuckTime;
     }
     // Set gameTime to in game time (ducktime) minus load times
     if (current.loading == 0) {
