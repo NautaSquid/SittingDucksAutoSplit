@@ -2,7 +2,8 @@
 state("overlay", "US") {
     short loading: "overlay.exe", 0x1D5A5C, 0x70, 0x5FC;
     short missionComplete: "overlay.exe", 0x1D5A48, 0x8, 0x268;
-    float duckTime: "overlay.exe", 0x1D5A50, 0x26DC;
+    float duckTimeSeconds: "overlay.exe", 0x1D5A50, 0x26DC;
+    float duckTimeHours: "overlay.exe", 0x1D5A50, 0x26D8;
     int featherCount: "overlay.exe", 0x1D5A50, 0x1F54;
 }
 
@@ -10,7 +11,8 @@ state("overlay", "US") {
 state("overlay", "EU") {
     short loading: "overlay.exe", 0x1D5A4C, 0x70, 0x5FC;
     short missionComplete: "overlay.exe", 0x1D5A38, 0x8, 0x268;
-    float duckTime: "overlay.exe", 0x1D5A40, 0x26DC;
+    float duckTimeSeconds: "overlay.exe", 0x1D5A40, 0x26DC;
+    float duckTimeHours: "overlay.exe", 0x1D5A40, 0x26D8;
     int featherCount: "overlay.exe", 0x1D5A40, 0x1F54;
 }
 
@@ -18,7 +20,8 @@ state("overlay", "EU") {
 state("overlay", "RU") {
     short loading: "overlay.exe", 0x1D6A8C, 0x70, 0x5FC; 
     short missionComplete: "overlay.exe", 0x1D6A90, 0x18, 0x9C, 0x4BC, 0x560, 0x40, 0x38, 0xE08;
-    float duckTime: "overlay.exe", 0x1D6A80, 0x26DC;
+    float duckTimeSeconds: "overlay.exe", 0x1D6A80, 0x26DC;
+    float duckTimeHours: "overlay.exe", 0x1D6A80, 0x26D8;
     int featherCount: "overlay.exe", 0x1D6A80, 0x1F54;
 }
 
@@ -88,8 +91,8 @@ onReset {
 update {
     // Get Duck Time (In game timer) and store it
     if (timer.CurrentPhase == TimerPhase.Running) {
-        float milliseconds = current.duckTime * 1000f;
-        vars.duckTime = new TimeSpan(0, 0, 0, 0, (int)milliseconds);
+        int milliseconds = (int)(current.duckTimeSeconds * 1000f);
+        vars.duckTime = new TimeSpan(0, (int)current.duckTimeHours, 0, 0, milliseconds);
         vars.duckTimeFormatted = vars.duckTime.ToString(@"hh\:mm\:ss\.ff");
         // Calculate Time dilation (Duck Milliseconds Per Millisecond)
         vars.rtms = (float)((TimeSpan)timer.CurrentTime.RealTime).Ticks / 10000;
@@ -107,16 +110,19 @@ isLoading {
 gameTime {
      // Calculate total load times
     if (current.loading != 0) {
-        int delta_ms = (int)((current.duckTime - old.duckTime) * 1000f);
-        vars.totalLoads += new TimeSpan(0, 0, 0, 0, delta_ms);
+        int oldMilliseconds = (int)Math.Round(old.duckTimeSeconds * 1000f) + ((int)old.duckTimeHours * 3600000);
+        int currentMilliseconds = (int)Math.Round(current.duckTimeSeconds * 1000f) + ((int)current.duckTimeHours * 3600000);
+        int delta = currentMilliseconds - oldMilliseconds;
+        vars.totalLoads += new TimeSpan(0, 0, 0, 0, delta);
     }
     // Set gameTime to in game time (ducktime) minus load times
     if (current.loading == 0) {
         TimeSpan interval = (vars.duckTime - vars.totalLoads);
         return interval;
     }
+    
 }
 
 split { if (current.missionComplete > old.missionComplete) { return true; } }
 
-start { if (current.duckTime < old.duckTime) { return true; } }
+start { if (current.duckTimeSeconds < old.duckTimeSeconds) { return true; } }
