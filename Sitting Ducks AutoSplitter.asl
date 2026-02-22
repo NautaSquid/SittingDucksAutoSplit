@@ -40,23 +40,23 @@ init {
     print("MD5: " + MD5Hash);
     switch(MD5Hash){
         // EU
-        case "ba3331c343aa376e20de60638004043f" :
+        case "BA3331C343AA376E20DE60638004043F" :
             version = "EU";
             break;
         // US 2004
-        case "5c52ac0992ee9ad489fd7cc021769119" : 
+        case "5C52AC0992EE9AD489FD7CC021769119" : 
             version = "US";
             break;
         // US 2005
-        case "180e2bb39b7c3a935b0f3ad0c90ff864" :
+        case "180E2BB39B7C3A935B0F3AD0C90FF864" :
             version = "US";
             break;
         // Polish
-        case "fc10de7c91c71717d8585060f8e5adad" :
+        case "FC10DE7C91C71717D8585060F8E5ADAD" :
             version = "RU";
             break;
         // Russian
-        case "3dd6bd8942a9797012c7ecc91856c213" :
+        case "3DD6BD8942A9797012C7ECC91856C213" :
             version = "RU";
             break;
         // Unknown
